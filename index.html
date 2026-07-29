@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#12151c">
+<title>Frameby 대시보드 허브</title>
+<style>
+  :root{
+    --bg:#12151c;
+    --card:#1a1e29;
+    --card-hover:#222736;
+    --text:#eef0f5;
+    --sub:#9aa3b5;
+    --accent:#5b8cff;
+    --border:#2a2f3d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:64px 24px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:48px;
+  }
+  header h1{
+    font-size:28px;
+    margin:0 0 8px;
+    font-weight:700;
+  }
+  header p{
+    color:var(--sub);
+    margin:0;
+    font-size:14px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    width:100%;
+    max-width:1100px;
+  }
+  a.card{
+    text-decoration:none;
+    color:var(--text);
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:28px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  a.card:hover{
+    background:var(--card-hover);
+    border-color:var(--accent);
+    transform:translateY(-3px);
+  }
+  .icon{
+    font-size:32px;
+    width:52px;
+    height:52px;
+    border-radius:12px;
+    background:rgba(91,140,255,.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .card h2{
+    font-size:17px;
+    margin:0;
+  }
+  .card p{
+    font-size:13px;
+    color:var(--sub);
+    margin:0;
+    line-height:1.5;
+  }
+  footer{
+    margin-top:56px;
+    color:var(--sub);
+    font-size:12px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Frameby 대시보드 허브</h1>
+  <p>원하는 대시보드를 선택하세요</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>각 대시보드 상단 네비게이션에서 언제든 다른 대시보드로 이동할 수 있습니다</footer>
+
+<script>
+  // 대시보드 목록 — nav.js와 동일한 목록을 유지하세요
+  const DASHBOARDS = [
+    { icon:"💰", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
+    { icon:"📦", name:"제품별 성과", desc:"제품 단위 판매·전환 지표", url:"https://frameby-marketing.github.io/Product/" },
+    { icon:"📢", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
+    { icon:"📈", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
+    { icon:"🚚", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+  ];
+
+  const grid = document.getElementById("grid");
+  DASHBOARDS.forEach(d=>{
+    const a = document.createElement("a");
+    a.className = "card";
+    a.href = d.url;
+    a.innerHTML = `
+      <div class="icon">${d.icon}</div>
+      <h2>${d.name}</h2>
+      <p>${d.desc}</p>
+    `;
+    grid.appendChild(a);
+  });
+</script>
+
+</body>
+</html>
