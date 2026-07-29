@@ -1,135 +1,426 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#12151c">
-<title>Frameby 대시보드 허브</title>
+<meta name="theme-color" content="#0b0d13">
+<title>Frameby Dashboard Hub</title>
 <style>
   :root{
-    --bg:#12151c;
-    --card:#1a1e29;
-    --card-hover:#222736;
+    --bg:#0b0d13;
+    --glow1:rgba(91,140,255,.14);
+    --glow2:rgba(52,211,153,.08);
+    --grid-line:rgba(255,255,255,.025);
+    --card:#151923;
+    --card-hover:#1b2130;
     --text:#eef0f5;
-    --sub:#9aa3b5;
-    --accent:#5b8cff;
-    --border:#2a2f3d;
+    --sub:#8b93a7;
+    --sub2:#5b6273;
+    --border:#242a38;
+    --topbar-bg:rgba(11,13,19,.72);
+    --shadow:rgba(0,0,0,.5);
+  }
+  html[data-theme="light"]{
+    --bg:#f4f5f8;
+    --glow1:rgba(91,140,255,.10);
+    --glow2:rgba(52,211,153,.07);
+    --grid-line:rgba(15,17,23,.04);
+    --card:#ffffff;
+    --card-hover:#f6f7fa;
+    --text:#14161c;
+    --sub:#5b6273;
+    --sub2:#8b93a7;
+    --border:#e4e6eb;
+    --topbar-bg:rgba(255,255,255,.78);
+    --shadow:rgba(15,23,42,.12);
   }
   *{box-sizing:border-box;}
+  html,body{height:100%;}
   body{
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI",sans-serif;
-    background:var(--bg);
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--glow1), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 90% 10%, var(--glow2), transparent 60%),
+      var(--bg);
     color:var(--text);
     min-height:100vh;
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:64px 24px;
+    position:relative;
+    transition:background .2s ease, color .2s ease;
   }
-  .grid{
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* top bar */
+  .topbar{
+    position:sticky;
+    top:0;
+    width:100%;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 32px;
+    background:var(--topbar-bg);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand img.logo{
+    height:34px;
+    width:auto;
+    display:block;
+  }
+  .brand .word{
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--text);
+  }
+  .brand .word small{
+    display:block;
+    font-size:10px;
+    font-weight:500;
+    color:var(--sub2);
+    letter-spacing:.08em;
+  }
+
+  .top-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .theme-toggle{
+    display:flex;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:3px;
+    gap:2px;
+  }
+  .theme-btn{
+    border:none;
+    background:transparent;
+    color:var(--sub2);
+    font-size:13px;
+    line-height:1;
+    padding:7px 11px;
+    border-radius:999px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-weight:600;
+    transition:background .15s ease, color .15s ease;
+  }
+  .theme-btn.active{
+    background:rgba(91,140,255,.16);
+    color:#5b8cff;
+  }
+  .status-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--sub);
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:999px;
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .status-pill .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#34d399;
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}
+    70%{box-shadow:0 0 0 6px rgba(52,211,153,0);}
+    100%{box-shadow:0 0 0 0 rgba(52,211,153,0);}
+  }
+
+  /* main */
+  main{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:1080px;
+    padding:56px 24px 48px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:20px;
+    gap:36px;
+  }
+  .section{
     width:100%;
-    max-width:1100px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .section-label{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--sub2);
+    align-self:flex-start;
+    padding-left:4px;
   }
   .row{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:20px;
+    gap:18px;
     width:100%;
   }
-  .row a.card{
-    flex:0 1 260px;
-  }
+
   a.card{
+    --accent:#5b8cff;
     text-decoration:none;
     color:var(--text);
-    background:var(--card);
+    background:linear-gradient(180deg, var(--card), var(--card));
     border:1px solid var(--border);
-    border-radius:16px;
-    padding:28px 22px;
+    border-radius:18px;
+    padding:24px;
+    flex:0 1 320px;
     display:flex;
     flex-direction:column;
-    gap:14px;
-    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+    gap:16px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  a.card::after{
+    content:"";
+    position:absolute;
+    inset:-1px;
+    border-radius:18px;
+    padding:1px;
+    background:linear-gradient(135deg, var(--accent), transparent 40%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    opacity:0;
+    transition:opacity .18s ease;
+    pointer-events:none;
   }
   a.card:hover{
+    transform:translateY(-4px);
     background:var(--card-hover);
-    border-color:var(--accent);
-    transform:translateY(-3px);
+    box-shadow:0 16px 32px -12px var(--shadow), 0 0 0 1px rgba(255,255,255,.02);
+  }
+  a.card:hover::after{opacity:1;}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
   }
   .icon{
-    font-size:32px;
-    width:52px;
-    height:52px;
+    font-size:22px;
+    width:44px;
+    height:44px;
     border-radius:12px;
-    background:rgba(91,140,255,.12);
+    background:color-mix(in srgb, var(--accent) 16%, transparent);
     display:flex;
     align-items:center;
     justify-content:center;
   }
+  .tag{
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 14%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    padding:4px 9px;
+    border-radius:999px;
+  }
   .card h2{
-    font-size:17px;
+    font-size:16.5px;
     margin:0;
+    font-weight:700;
+    letter-spacing:-.01em;
   }
   .card p{
-    font-size:13px;
+    font-size:12.5px;
     color:var(--sub);
     margin:0;
-    line-height:1.5;
+    line-height:1.55;
   }
-  footer{
-    margin-top:56px;
-    color:var(--sub);
+  .card-foot{
+    margin-top:4px;
+    padding-top:14px;
+    border-top:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .card-foot .live{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    color:var(--sub2);
+  }
+  .card-foot .live .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:#34d399;
+  }
+  .card-foot .go{
     font-size:12px;
+    font-weight:600;
+    color:var(--sub2);
+    transition:color .18s ease, transform .18s ease;
+  }
+  a.card:hover .card-foot .go{
+    color:var(--accent);
+    transform:translateX(2px);
+  }
+
+  footer{
+    position:relative;
+    z-index:1;
+    margin-top:8px;
+    padding:22px 24px 40px;
+    color:var(--sub2);
+    font-size:11.5px;
     text-align:center;
+    border-top:1px solid var(--border);
+    width:100%;
+    max-width:1080px;
   }
 </style>
 </head>
 <body>
 
-<div class="grid" id="grid"></div>
+<div class="topbar">
+  <div class="brand">
+    <img id="logo" class="logo" src="assets/logo-white.png" alt="Frameby">
+    <div class="word">FRAMEBY<small>DASHBOARD HUB</small></div>
+  </div>
+  <div class="top-right">
+    <div class="theme-toggle" role="group" aria-label="테마 전환">
+      <button id="btn-dark" class="theme-btn" type="button">🌙 다크</button>
+      <button id="btn-light" class="theme-btn" type="button">☀️ 라이트</button>
+    </div>
+    <div class="status-pill"><span class="dot"></span><span id="clock">--:--:--</span></div>
+  </div>
+</div>
+
+<main>
+  <div class="grid" id="grid"></div>
+</main>
 
 <footer>각 대시보드 상단 네비게이션에서 언제든 다른 대시보드로 이동할 수 있습니다</footer>
 
 <script>
   // 대시보드 목록 — nav.js와 동일한 목록을 유지하세요
-  // 행(row) 단위로 배치: 1행 = 3개, 2행 = 1개, 3행 = 1개
-  const ROWS = [
-    [
-      { icon:"💰", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
-      { icon:"📦", name:"제품별 성과", desc:"제품 단위 판매·전환 지표", url:"https://frameby-marketing.github.io/Product/" },
-      { icon:"📢", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
-    ],
-    [
-      { icon:"📈", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
-    ],
-    [
-      { icon:"🚚", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
-    ],
+  const SECTIONS = [
+    {
+      label: "매출 · 성과 · 광고",
+      items: [
+        { icon:"💰", tag:"매출", accent:"#5b8cff", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
+        { icon:"📦", tag:"제품", accent:"#a78bfa", name:"제품별 성과", desc:"제품 단위 판매 · 전환 지표", url:"https://frameby-marketing.github.io/Product/" },
+        { icon:"📢", tag:"광고", accent:"#ff9f43", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
+      ],
+    },
+    {
+      label: "수익성",
+      items: [
+        { icon:"📈", tag:"손익", accent:"#34d399", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
+      ],
+    },
+    {
+      label: "운영",
+      items: [
+        { icon:"🚚", tag:"발주", accent:"#22d3ee", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+      ],
+    },
   ];
 
   const grid = document.getElementById("grid");
-  ROWS.forEach(row=>{
+  SECTIONS.forEach(section=>{
+    const sectionEl = document.createElement("div");
+    sectionEl.className = "section";
+
+    const label = document.createElement("div");
+    label.className = "section-label";
+    label.textContent = section.label;
+    sectionEl.appendChild(label);
+
     const rowEl = document.createElement("div");
     rowEl.className = "row";
-    row.forEach(d=>{
+    section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
       a.href = d.url;
+      a.style.setProperty("--accent", d.accent);
       a.innerHTML = `
-        <div class="icon">${d.icon}</div>
+        <div class="card-top">
+          <div class="icon">${d.icon}</div>
+          <span class="tag">${d.tag}</span>
+        </div>
         <h2>${d.name}</h2>
         <p>${d.desc}</p>
+        <div class="card-foot">
+          <span class="live"><span class="dot"></span>연동됨</span>
+          <span class="go">바로가기 →</span>
+        </div>
       `;
       rowEl.appendChild(a);
     });
-    grid.appendChild(rowEl);
+    sectionEl.appendChild(rowEl);
+    grid.appendChild(sectionEl);
   });
+
+  function tick(){
+    const el = document.getElementById("clock");
+    if(el) el.textContent = new Date().toLocaleTimeString("ko-KR",{hour12:false});
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- 다크/라이트 모드 ----
+  const logoEl = document.getElementById("logo");
+  const btnDark = document.getElementById("btn-dark");
+  const btnLight = document.getElementById("btn-light");
+
+  function applyTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    logoEl.src = theme === "light" ? "assets/logo-black.png" : "assets/logo-white.png";
+    btnDark.classList.toggle("active", theme === "dark");
+    btnLight.classList.toggle("active", theme === "light");
+    try { localStorage.setItem("fb-hub-theme", theme); } catch(e){}
+  }
+
+  let saved = "dark";
+  try { saved = localStorage.getItem("fb-hub-theme") || "dark"; } catch(e){}
+  applyTheme(saved);
+
+  btnDark.addEventListener("click", () => applyTheme("dark"));
+  btnLight.addEventListener("click", () => applyTheme("light"));
 </script>
 
 </body>
