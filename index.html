@@ -27,26 +27,23 @@
     align-items:center;
     padding:64px 24px;
   }
-  header{
-    text-align:center;
-    margin-bottom:48px;
-  }
-  header h1{
-    font-size:28px;
-    margin:0 0 8px;
-    font-weight:700;
-  }
-  header p{
-    color:var(--sub);
-    margin:0;
-    font-size:14px;
-  }
   .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     gap:20px;
     width:100%;
     max-width:1100px;
+  }
+  .row{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+    width:100%;
+  }
+  .row a.card{
+    flex:0 1 260px;
   }
   a.card{
     text-decoration:none;
@@ -95,36 +92,43 @@
 </head>
 <body>
 
-<header>
-  <h1>Frameby 대시보드 허브</h1>
-  <p>원하는 대시보드를 선택하세요</p>
-</header>
-
 <div class="grid" id="grid"></div>
 
 <footer>각 대시보드 상단 네비게이션에서 언제든 다른 대시보드로 이동할 수 있습니다</footer>
 
 <script>
   // 대시보드 목록 — nav.js와 동일한 목록을 유지하세요
-  const DASHBOARDS = [
-    { icon:"💰", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
-    { icon:"📦", name:"제품별 성과", desc:"제품 단위 판매·전환 지표", url:"https://frameby-marketing.github.io/Product/" },
-    { icon:"📢", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
-    { icon:"📈", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
-    { icon:"🚚", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+  // 행(row) 단위로 배치: 1행 = 3개, 2행 = 1개, 3행 = 1개
+  const ROWS = [
+    [
+      { icon:"💰", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
+      { icon:"📦", name:"제품별 성과", desc:"제품 단위 판매·전환 지표", url:"https://frameby-marketing.github.io/Product/" },
+      { icon:"📢", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
+    ],
+    [
+      { icon:"📈", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
+    ],
+    [
+      { icon:"🚚", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+    ],
   ];
 
   const grid = document.getElementById("grid");
-  DASHBOARDS.forEach(d=>{
-    const a = document.createElement("a");
-    a.className = "card";
-    a.href = d.url;
-    a.innerHTML = `
-      <div class="icon">${d.icon}</div>
-      <h2>${d.name}</h2>
-      <p>${d.desc}</p>
-    `;
-    grid.appendChild(a);
+  ROWS.forEach(row=>{
+    const rowEl = document.createElement("div");
+    rowEl.className = "row";
+    row.forEach(d=>{
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = d.url;
+      a.innerHTML = `
+        <div class="icon">${d.icon}</div>
+        <h2>${d.name}</h2>
+        <p>${d.desc}</p>
+      `;
+      rowEl.appendChild(a);
+    });
+    grid.appendChild(rowEl);
   });
 </script>
 
