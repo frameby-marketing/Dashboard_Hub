@@ -7,8 +7,42 @@
  * 현재 페이지가 어느 대시보드인지는 주소(URL)를 보고 자동으로 판별합니다.
  * (data-current 속성은 더 이상 필요하지 않지만, 남아있어도 무시되지 않고
  *  URL로 판별이 안 될 때만 보조적으로 사용됩니다.)
+ *
+ * window.FBAuth — 대시보드 5개가 전부 같은 도메인
+ * (frameby-marketing.github.io) 아래에 있다는 점을 이용해, 구글 로그인으로
+ * 받은 access token을 localStorage에 잠깐 저장해두는 공용 캐시입니다.
+ * 각 대시보드의 로그인 스크립트에서 아래처럼 사용하세요.
+ *   - 로그인 성공 시:  FBAuth.save(accessToken, expiresInSeconds)
+ *   - 페이지 시작 시:  FBAuth.get() → 유효한 토큰이 있으면 그대로 재사용
+ *   - 로그아웃 시:     FBAuth.clear()
+ * 토큰이 만료되었거나 없으면 get()은 null을 반환하므로, 그 경우엔
+ * 지금처럼 로그인 화면을 그대로 보여주면 됩니다.
  * ------------------------------------------------------------
  */
+(function () {
+  const KEY = "fb-google-token";
+  window.FBAuth = {
+    save(accessToken, expiresInSeconds) {
+      const ttl = (expiresInSeconds ? expiresInSeconds * 1000 : 3600 * 1000) - 60000; // 60초 여유
+      const record = { access_token: accessToken, expires_at: Date.now() + Math.max(ttl, 0) };
+      try { localStorage.setItem(KEY, JSON.stringify(record)); } catch (e) {}
+    },
+    get() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return null;
+        const record = JSON.parse(raw);
+        if (!record || !record.access_token || !record.expires_at) return null;
+        if (Date.now() >= record.expires_at) { this.clear(); return null; }
+        return record.access_token;
+      } catch (e) { return null; }
+    },
+    clear() {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+    },
+  };
+})();
+
 (function () {
   const HOME_URL = "https://frameby-marketing.github.io/Dashboard_Hub/";
 
