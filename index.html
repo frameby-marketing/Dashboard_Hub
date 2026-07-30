@@ -182,12 +182,6 @@
     width:100%;
   }
 
-  @media (max-width:640px){
-    main{ gap:64px; padding:40px 20px 32px; }
-    .row{ flex-direction:column; align-items:center; }
-    a.card{ flex:0 0 auto; width:100%; max-width:340px; }
-  }
-
   a.card{
     --accent:#5b8cff;
     text-decoration:none;
@@ -293,6 +287,19 @@
   a.card:hover .card-foot .go{
     color:var(--accent);
     transform:translateX(2px);
+  }
+
+  @media (max-width:640px){
+    main{ gap:64px; padding:40px 20px 32px; }
+    .row{ flex-direction:column; align-items:center; }
+    a.card{
+      flex:0 0 auto;
+      width:100%;
+      max-width:340px;
+      height:auto;
+      padding:20px;
+      gap:12px;
+    }
   }
 
   footer{
