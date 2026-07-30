@@ -168,7 +168,7 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:36px;
+    gap:64px;
   }
   .section{
     width:100%;
@@ -192,6 +192,15 @@
     justify-content:center;
     gap:18px;
     width:100%;
+  }
+  /* 카드가 2개 이상인 줄은 그리드로 고정해서, 창 너비가 조금 줄어도
+     의도치 않게 세로로 한 줄씩 쌓이지 않게 한다 */
+  .row.row-multi{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0,1fr));
+  }
+  @media (max-width:760px){
+    .row.row-multi{ grid-template-columns:1fr; }
   }
 
   a.card{
@@ -371,7 +380,7 @@
     sectionEl.appendChild(label);
 
     const rowEl = document.createElement("div");
-    rowEl.className = "row";
+    rowEl.className = "row" + (section.items.length > 1 ? " row-multi" : "");
     section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
