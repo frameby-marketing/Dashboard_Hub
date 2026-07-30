@@ -3,13 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0d13">
+<meta name="theme-color" content="#000000">
 <title>Frameby Dashboard Hub</title>
 <style>
   :root{
-    --bg:#0b0d13;
-    --glow1:rgba(91,140,255,.14);
-    --glow2:rgba(52,211,153,.08);
+    --bg:#000000;
     --grid-line:rgba(255,255,255,.025);
     --card:#151923;
     --card-hover:#1b2130;
@@ -17,13 +15,11 @@
     --sub:#8b93a7;
     --sub2:#5b6273;
     --border:#242a38;
-    --topbar-bg:rgba(11,13,19,.72);
+    --topbar-bg:rgba(0,0,0,.72);
     --shadow:rgba(0,0,0,.5);
   }
   html[data-theme="light"]{
     --bg:#f4f5f8;
-    --glow1:rgba(91,140,255,.10);
-    --glow2:rgba(52,211,153,.07);
     --grid-line:rgba(15,17,23,.04);
     --card:#ffffff;
     --card-hover:#f6f7fa;
@@ -39,10 +35,7 @@
   body{
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI",sans-serif;
-    background:
-      radial-gradient(ellipse 900px 500px at 50% -10%, var(--glow1), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 90% 10%, var(--glow2), transparent 60%),
-      var(--bg);
+    background:var(--bg);
     color:var(--text);
     min-height:100vh;
     display:flex;
@@ -146,7 +139,7 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:140px;
+    gap:420px;
   }
   .section{
     width:100%;
