@@ -168,7 +168,7 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:64px;
+    gap:96px;
   }
   .section{
     width:100%;
@@ -190,17 +190,8 @@
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:18px;
+    gap:20px;
     width:100%;
-  }
-  /* 카드가 2개 이상인 줄은 그리드로 고정해서, 창 너비가 조금 줄어도
-     의도치 않게 세로로 한 줄씩 쌓이지 않게 한다 */
-  .row.row-multi{
-    display:grid;
-    grid-template-columns:repeat(3, minmax(0,1fr));
-  }
-  @media (max-width:760px){
-    .row.row-multi{ grid-template-columns:1fr; }
   }
 
   a.card{
@@ -211,7 +202,9 @@
     border:1px solid var(--border);
     border-radius:18px;
     padding:24px;
-    flex:0 1 320px;
+    width:300px;
+    height:216px;
+    flex:0 0 300px;
     display:flex;
     flex-direction:column;
     gap:16px;
@@ -279,7 +272,7 @@
     line-height:1.55;
   }
   .card-foot{
-    margin-top:4px;
+    margin-top:auto;
     padding-top:14px;
     border-top:1px solid var(--border);
     display:flex;
@@ -380,7 +373,7 @@
     sectionEl.appendChild(label);
 
     const rowEl = document.createElement("div");
-    rowEl.className = "row" + (section.items.length > 1 ? " row-multi" : "");
+    rowEl.className = "row";
     section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
