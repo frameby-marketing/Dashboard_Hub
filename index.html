@@ -135,28 +135,6 @@
     background:rgba(91,140,255,.16);
     color:#5b8cff;
   }
-  .status-pill{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:12px;
-    color:var(--sub);
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:6px 12px;
-    border-radius:999px;
-    transition:background .2s ease, border-color .2s ease;
-  }
-  .status-pill .dot{
-    width:7px;height:7px;border-radius:50%;
-    background:#34d399;
-    animation:pulse 2s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}
-    70%{box-shadow:0 0 0 6px rgba(52,211,153,0);}
-    100%{box-shadow:0 0 0 0 rgba(52,211,153,0);}
-  }
 
   /* main */
   main{
@@ -168,14 +146,26 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:96px;
+    gap:140px;
   }
   .section{
     width:100%;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:16px;
+    gap:22px;
+  }
+  .section-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+  }
+  .section-head::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--border);
   }
   .section-label{
     font-size:11px;
@@ -183,8 +173,7 @@
     letter-spacing:.16em;
     text-transform:uppercase;
     color:var(--sub2);
-    align-self:flex-start;
-    padding-left:4px;
+    white-space:nowrap;
   }
   .row{
     display:flex;
@@ -192,6 +181,12 @@
     justify-content:center;
     gap:20px;
     width:100%;
+  }
+
+  @media (max-width:640px){
+    main{ gap:64px; padding:40px 20px 32px; }
+    .row{ flex-direction:column; align-items:center; }
+    a.card{ flex:0 0 auto; width:100%; max-width:340px; }
   }
 
   a.card{
@@ -327,7 +322,6 @@
       <button id="btn-dark" class="theme-btn" type="button">🌙 다크</button>
       <button id="btn-light" class="theme-btn" type="button">☀️ 라이트</button>
     </div>
-    <div class="status-pill"><span class="dot"></span><span id="clock">--:--:--</span></div>
   </div>
 </div>
 
@@ -367,10 +361,13 @@
     const sectionEl = document.createElement("div");
     sectionEl.className = "section";
 
+    const head = document.createElement("div");
+    head.className = "section-head";
     const label = document.createElement("div");
     label.className = "section-label";
     label.textContent = section.label;
-    sectionEl.appendChild(label);
+    head.appendChild(label);
+    sectionEl.appendChild(head);
 
     const rowEl = document.createElement("div");
     rowEl.className = "row";
@@ -396,13 +393,6 @@
     sectionEl.appendChild(rowEl);
     grid.appendChild(sectionEl);
   });
-
-  function tick(){
-    const el = document.getElementById("clock");
-    if(el) el.textContent = new Date().toLocaleTimeString("ko-KR",{hour12:false});
-  }
-  tick();
-  setInterval(tick, 1000);
 
   // ---- 다크/라이트 모드 ----
   const logoEl = document.getElementById("logo");
