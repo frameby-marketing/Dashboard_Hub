@@ -151,21 +151,24 @@
   .section-head{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:10px;
     width:100%;
+    padding-bottom:14px;
+    border-bottom:2px solid #5b8cff;
   }
-  .section-head::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--border);
+  .section-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:#5b8cff;
+    flex:none;
+    box-shadow:0 0 0 4px rgba(91,140,255,.18);
   }
   .section-label{
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--sub2);
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:-.3px;
+    color:var(--text);
     white-space:nowrap;
   }
   .row{
@@ -301,6 +304,42 @@
     width:100%;
     max-width:1080px;
   }
+
+  .refresh-fab{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 18px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 10px 24px -8px var(--shadow);
+    transition:background .18s ease, border-color .18s ease, transform .15s ease;
+  }
+  .refresh-fab:hover{
+    background:var(--card-hover);
+    border-color:#5b8cff;
+    transform:translateY(-2px);
+  }
+  .refresh-fab .icon{
+    font-size:15px;
+    display:inline-block;
+  }
+  .refresh-fab.spinning .icon{
+    animation:fb-spin .6s linear;
+  }
+  @keyframes fb-spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
 </style>
 </head>
 <body>
@@ -323,6 +362,10 @@
 </main>
 
 <footer>각 대시보드 상단 네비게이션에서 언제든 다른 대시보드로 이동할 수 있습니다</footer>
+
+<button class="refresh-fab" id="refreshFab" type="button">
+  <span class="icon">🔄</span> 새로고침
+</button>
 
 <script>
   // 대시보드 목록 — nav.js와 동일한 목록을 유지하세요
@@ -356,9 +399,12 @@
 
     const head = document.createElement("div");
     head.className = "section-head";
+    const dot = document.createElement("span");
+    dot.className = "section-dot";
     const label = document.createElement("div");
     label.className = "section-label";
     label.textContent = section.label;
+    head.appendChild(dot);
     head.appendChild(label);
     sectionEl.appendChild(head);
 
@@ -406,6 +452,13 @@
 
   btnDark.addEventListener("click", () => applyTheme("dark"));
   btnLight.addEventListener("click", () => applyTheme("light"));
+
+  // ---- 새로고침 버튼 ----
+  const refreshFab = document.getElementById("refreshFab");
+  refreshFab.addEventListener("click", () => {
+    refreshFab.classList.add("spinning");
+    setTimeout(() => location.reload(), 150);
+  });
 </script>
 
 </body>
