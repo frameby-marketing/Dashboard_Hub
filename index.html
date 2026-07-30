@@ -181,6 +181,9 @@
     gap:20px;
     width:100%;
   }
+  .row.row-left{
+    justify-content:flex-start;
+  }
 
   a.card{
     --accent:#5b8cff;
@@ -433,7 +436,7 @@
     sectionEl.appendChild(head);
 
     const rowEl = document.createElement("div");
-    rowEl.className = "row";
+    rowEl.className = "row" + (idx > 0 ? " row-left" : "");
     section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
