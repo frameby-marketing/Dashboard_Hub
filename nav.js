@@ -52,6 +52,7 @@
     { id: "ads",     icon: "📢", name: "광고",       url: "https://frameby-marketing.github.io/ADS/" },
     { id: "profit",  icon: "📈", name: "영업이익",    url: "https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
     { id: "order",   icon: "🚚", name: "발주",       url: "https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+    { id: "cs",      icon: "🚛", name: "물류",       url: "https://frameby-marketing.github.io/CS/" },
   ];
 
   // currentScript는 동기 실행 중에만 유효하므로 지금 바로 캡처해둔다
