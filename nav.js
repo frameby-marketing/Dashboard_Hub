@@ -52,6 +52,7 @@
     { id: "ads",     icon: "📢", name: "광고",       url: "https://frameby-marketing.github.io/ADS/" },
     { id: "profit",  icon: "📈", name: "영업이익",    url: "https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
     { id: "order",   icon: "🚚", name: "발주",       url: "https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
+    { id: "stock",   icon: "📦", name: "재고",       url: "https://frameby-marketing.github.io/Stock/" },
     { id: "cs",      icon: "🚛", name: "물류",       url: "https://frameby-marketing.github.io/CS/" },
   ];
 
