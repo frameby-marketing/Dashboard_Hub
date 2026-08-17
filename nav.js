@@ -52,10 +52,7 @@
     { id: "ads",     icon: "📢", name: "광고",       url: "https://frameby-marketing.github.io/ADS/" },
     { id: "profit",  icon: "📈", name: "영업이익",    url: "https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
     { id: "finance", icon: "💵", name: "재무",       url: "https://frameby-marketing.github.io/Finance/" },
-    { id: "order",   icon: "🚚", name: "발주",       url: "https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
-    { id: "stock",   icon: "📦", name: "재고",       url: "https://frameby-marketing.github.io/Stock/" },
-    { id: "cs",      icon: "🚛", name: "물류",       url: "https://frameby-marketing.github.io/CS/" },
-    { id: "coupang", icon: "🛒", name: "쿠팡",       url: "https://frameby-marketing.github.io/Coupang/" },
+    { id: "operation", icon: "🧭", name: "운영",     url: "https://frameby-marketing.github.io/Operation/" },
   ];
 
   // currentScript는 동기 실행 중에만 유효하므로 지금 바로 캡처해둔다
