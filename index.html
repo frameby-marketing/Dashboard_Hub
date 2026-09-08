@@ -415,7 +415,7 @@
         { icon:"💰", tag:"매출", accent:"#5b8cff", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
         { icon:"📦", tag:"제품", accent:"#a78bfa", name:"제품별 성과", desc:"제품 단위 판매 · 전환 지표", url:"https://frameby-marketing.github.io/Product/" },
         { icon:"📢", tag:"광고", accent:"#ff9f43", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
-        { icon:"🤝", tag:"인플루언서", accent:"#fb7185", name:"인플루언서", desc:"섭외 · 협업 · 게시 진행 현황", url:"https://frameby-marketing.github.io/Influencer/" },
+        { icon:"🤝", tag:"인플루언서", accent:"#fb7185", name:"인플루언서", desc:"섭외 · 협업 · 게시 진행 현황", url:"https://frameby-marketing.github.io/influencer/" },
       ],
     },
     {
@@ -449,7 +449,7 @@
     sectionEl.appendChild(head);
 
     const rowEl = document.createElement("div");
-    rowEl.className = "row" + (idx > 0 ? " row-left" : "");
+    rowEl.className = "row row-left";
     section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
