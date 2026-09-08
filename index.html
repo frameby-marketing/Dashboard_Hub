@@ -143,13 +143,7 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-  }
-  .grid{
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:5px;
+    gap:3000px;
   }
   .section{
     width:100%;
@@ -188,7 +182,7 @@
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:40px;
+    gap:20px;
     width:100%;
   }
   .row.row-left{
@@ -306,8 +300,7 @@
     .topbar{ padding:12px 16px; flex-wrap:wrap; row-gap:8px; }
     .brand .word{ font-size:12px; }
     .theme-btn{ padding:6px 9px; font-size:12px; }
-    .grid{ gap:5px; }
-    main{ padding:32px 16px 28px; }
+    main{ gap:64px; padding:32px 16px 28px; }
     .row, .row.row-left{
       flex-direction:column;
       align-items:stretch;
@@ -422,19 +415,19 @@
         { icon:"💰", tag:"매출", accent:"#5b8cff", name:"전체 플랫폼 매출", desc:"채널 합산 매출 · 판매량 추이", url:"https://frameby-marketing.github.io/MAIN-/" },
         { icon:"📦", tag:"제품", accent:"#a78bfa", name:"제품별 성과", desc:"제품 단위 판매 · 전환 지표", url:"https://frameby-marketing.github.io/Product/" },
         { icon:"📢", tag:"광고", accent:"#ff9f43", name:"광고", desc:"채널별 광고비 · 매출 대비 광고비", url:"https://frameby-marketing.github.io/ADS/" },
+        { icon:"🤝", tag:"인플루언서", accent:"#fb7185", name:"인플루언서", desc:"섭외 · 협업 · 게시 진행 현황", url:"https://frameby-marketing.github.io/Influencer/" },
       ],
     },
     {
       label: "수익성",
       items: [
         { icon:"📈", tag:"손익", accent:"#34d399", name:"영업이익", desc:"마케팅 손익 대시보드", url:"https://frameby-marketing.github.io/MARKETING-DASHBOARD/" },
-        { icon:"💵", tag:"재무", accent:"#38bdf8", name:"재무", desc:"재무 현황 대시보드", url:"https://frameby-marketing.github.io/Finance/" },
       ],
     },
     {
       label: "운영",
       items: [
-        { icon:"🧭", tag:"운영", accent:"#22d3ee", name:"운영", desc:"발주 · 재고 · 물류 · 쿠팡 통합 관리", url:"https://frameby-marketing.github.io/Operation/" },
+        { icon:"🚚", tag:"발주", accent:"#22d3ee", name:"발주", desc:"발주 현황 관리", url:"https://frameby-marketing.github.io/ORDER-DASHBOARD/" },
       ],
     },
   ];
@@ -456,7 +449,7 @@
     sectionEl.appendChild(head);
 
     const rowEl = document.createElement("div");
-    rowEl.className = "row row-left";
+    rowEl.className = "row" + (idx > 0 ? " row-left" : "");
     section.items.forEach(d=>{
       const a = document.createElement("a");
       a.className = "card";
