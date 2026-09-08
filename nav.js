@@ -54,6 +54,12 @@
           id: "ads",
           name: "광고",
           url: "https://frameby-marketing.github.io/ADS/"
+        },
+
+        {
+          id: "influencer",
+          name: "인플루언서",
+          url: "https://frameby-marketing.github.io/Influencer/"
         }
 
       ]
