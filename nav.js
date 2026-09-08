@@ -59,7 +59,7 @@
         {
           id: "influencer",
           name: "인플루언서",
-          url: "https://frameby-marketing.github.io/Influencer/"
+          url: "https://frameby-marketing.github.io/influencer/"
         }
 
       ]
