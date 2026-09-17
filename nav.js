@@ -158,6 +158,22 @@
         }
 
       ]
+    },
+
+
+    {
+      id: "cx",
+      name: "CX",
+
+      items: [
+
+        {
+          id: "customerManagement",
+          name: "고객관리 통합",
+          url: "https://frameby-marketing.github.io/CS/"
+        }
+
+      ]
     }
 
   ];
