@@ -80,7 +80,7 @@
 
         {
           id: "financeDetail",
-          name: "재무",
+          name: "법인카드",
           url: "https://frameby-marketing.github.io/Finance/"
         }
 
@@ -149,6 +149,12 @@
           id: "reorder",
           name: "발주관리",
           tab: "reorder"
+        },
+
+        {
+          id: "b2b",
+          name: "B2B",
+          tab: "b2b"
         }
 
       ]
