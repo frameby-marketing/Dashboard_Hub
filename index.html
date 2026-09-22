@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
+<script>
+  /* 모든 대시보드와 같은 키를 사용하고, 화면이 그려지기 전에 저장 테마를 복원합니다. */
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      var legacy = localStorage.getItem("fb-hub-theme");
+      var theme = saved === "light" || saved === "dark"
+        ? saved
+        : (legacy === "light" || legacy === "dark" ? legacy : "dark");
+      localStorage.setItem("theme", theme);
+      localStorage.removeItem("fb-hub-theme");
+      document.documentElement.setAttribute("data-theme", theme);
+    } catch (e) {}
+  })();
+</script>
 <title>Frameby Dashboard Hub</title>
 <style>
   :root{
@@ -491,15 +506,20 @@
     logoEl.src = theme === "light" ? "assets/logo-black.png" : "assets/logo-white.png";
     btnDark.classList.toggle("active", theme === "dark");
     btnLight.classList.toggle("active", theme === "light");
-    try { localStorage.setItem("fb-hub-theme", theme); } catch(e){}
+    try { localStorage.setItem("theme", theme); } catch(e){}
   }
 
   let saved = "dark";
-  try { saved = localStorage.getItem("fb-hub-theme") || "dark"; } catch(e){}
+  try { saved = localStorage.getItem("theme") || "dark"; } catch(e){}
   applyTheme(saved);
 
   btnDark.addEventListener("click", () => applyTheme("dark"));
   btnLight.addEventListener("click", () => applyTheme("light"));
+  window.addEventListener("storage", (event) => {
+    if(event.key === "theme" && (event.newValue === "light" || event.newValue === "dark")){
+      applyTheme(event.newValue);
+    }
+  });
 
   // ---- 새로고침 버튼 ----
   const refreshFab = document.getElementById("refreshFab");
