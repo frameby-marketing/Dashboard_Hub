@@ -56,12 +56,6 @@
           url: "https://frameby-marketing.github.io/ADS/"
         },
 
-        {
-          id: "influencer",
-          name: "인플루언서",
-          url: "https://frameby-marketing.github.io/influencer/"
-        }
-
       ]
     },
 
@@ -80,7 +74,7 @@
 
         {
           id: "financeDetail",
-          name: "법인카드",
+          name: "재무",
           url: "https://frameby-marketing.github.io/Finance/"
         }
 
@@ -171,6 +165,12 @@
           id: "customerManagement",
           name: "고객관리 통합",
           url: "https://frameby-marketing.github.io/CS/"
+        },
+
+        {
+          id: "influencer",
+          name: "인플루언서",
+          url: "https://frameby-marketing.github.io/influencer/"
         }
 
       ]
