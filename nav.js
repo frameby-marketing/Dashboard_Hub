@@ -19,6 +19,7 @@
 
   const COLLAPSE_KEY = "fb-sidebar-collapsed";
   const THEME_KEY = "theme";
+  const LEGACY_HOME_THEME_KEY = "fb-hub-theme";
 
   const SIDEBAR_ID = "fb-sidebar";
 
@@ -351,8 +352,28 @@
 
     try {
 
-      const saved =
+      let saved =
         localStorage.getItem(THEME_KEY);
+
+      /* 예전 홈에서 사용하던 키가 남아 있으면 공통 키로 한 번만 이전합니다. */
+      if (saved !== "light" && saved !== "dark") {
+
+        const legacySaved =
+          localStorage.getItem(LEGACY_HOME_THEME_KEY);
+
+        if (
+          legacySaved === "light" ||
+          legacySaved === "dark"
+        ) {
+
+          saved = legacySaved;
+          localStorage.setItem(THEME_KEY, saved);
+
+        }
+
+      }
+
+      localStorage.removeItem(LEGACY_HOME_THEME_KEY);
 
 
       if (
