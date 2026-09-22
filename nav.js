@@ -26,6 +26,38 @@
   const WIDTH_OPEN = 248;
   const WIDTH_COLLAPSED = 60;
 
+  /* 페이지 자체 초기화가 저장된 테마를 덮어쓰지 못하도록 로딩 완료 전에는 저장을 잠급니다. */
+  let THEME_BOOT_LOCKED = true;
+  const INITIAL_SAVED_THEME = (() => {
+
+    try {
+
+      const saved = localStorage.getItem(THEME_KEY);
+
+      if (saved === "light" || saved === "dark") {
+
+        return saved;
+
+      }
+
+
+      const legacySaved = localStorage.getItem(LEGACY_HOME_THEME_KEY);
+
+      if (legacySaved === "light" || legacySaved === "dark") {
+
+        return legacySaved;
+
+      }
+
+    }
+
+    catch (e) {}
+
+
+    return "dark";
+
+  })();
+
 
   /* =========================================================
      메뉴 구성
@@ -441,7 +473,11 @@
       theme;
 
 
-    saveTheme(theme);
+    if (!THEME_BOOT_LOCKED) {
+
+      saveTheme(theme);
+
+    }
 
 
     const logo =
@@ -1941,6 +1977,46 @@
       }
 
     );
+
+
+    /*
+     * 일부 대시보드는 로딩 과정에서 data-theme="dark"를 다시 넣습니다.
+     * 모든 초기 스크립트가 끝난 뒤 저장된 공통 테마를 한 번 더 적용하고,
+     * 그 이후의 변경만 사용자가 선택한 값으로 저장합니다.
+     */
+    const finishThemeBoot = () => {
+
+      window.setTimeout(
+        () => {
+
+          document.documentElement.setAttribute(
+            "data-theme",
+            INITIAL_SAVED_THEME
+          );
+          saveTheme(INITIAL_SAVED_THEME);
+          THEME_BOOT_LOCKED = false;
+          syncSidebarTheme();
+
+        },
+        250
+      );
+
+    };
+
+
+    if (document.readyState === "complete") {
+
+      finishThemeBoot();
+
+    } else {
+
+      window.addEventListener(
+        "load",
+        finishThemeBoot,
+        { once:true }
+      );
+
+    }
 
 
 
