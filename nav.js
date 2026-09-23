@@ -191,27 +191,32 @@
     {
       id: "cx",
       name: "CX",
-
-      items: [
-
-        {
-          id: "customerManagement",
-          name: "고객관리 통합",
-          url: "https://frameby-marketing.github.io/CS/"
-        },
-
-        {
-          id: "influencer",
-          name: "인플루언서",
-          url: "https://frameby-marketing.github.io/influencer/"
-        },
-
-        {
-          id: "loginInformation",
-          name: "계정 정보",
-          url: "https://frameby-marketing.github.io/login/"
-        }
-
+      baseUrl: "https://frameby-marketing.github.io/CS/",
+      groups: [
+        { id: "customer", name: "고객", items: [
+          { id: "customerManagement", name: "고객 관리 통합", tab: "overview" },
+          { id: "inquiry", name: "고객문의", tab: "inquiry" },
+          { id: "review", name: "리뷰", tab: "review" },
+          { id: "chat", name: "채팅상담", tab: "chat" },
+          { id: "case", name: "케이스", tab: "case" },
+          { id: "outbound", name: "아웃바운드", tab: "outbound" },
+          { id: "seeding", name: "SNS 씨딩", tab: "seeding" },
+          { id: "social", name: "SNS 게시", tab: "social" },
+          { id: "improvement", name: "개선", tab: "improvement" },
+          { id: "weekly", name: "주간보고", tab: "weekly" },
+          { id: "influencer", name: "인플루언서", url: "https://frameby-marketing.github.io/influencer/" }
+        ]},
+        { id: "delivery", name: "배송", items: [
+          { id: "daily", name: "일자별", tab: "daily" },
+          { id: "incidents", name: "배송사고", tab: "incidents" }
+        ]},
+        { id: "dispatch", name: "출고원장", items: [
+          { id: "orders", name: "주문 원장", tab: "orders" },
+          { id: "coupangReceiving", name: "쿠팡 입고", tab: "coupangReceiving" }
+        ]},
+        { id: "account", name: "계정 정보", items: [
+          { id: "loginInformation", name: "로그인 정보 관리", url: "https://frameby-marketing.github.io/login/" }
+        ]}
       ]
     }
 
@@ -261,57 +266,19 @@
     for (const dept of DEPARTMENTS) {
 
 
-      /* Operation */
-
-      if (
-        dept.baseUrl &&
-        repoSegmentOf(dept.baseUrl) === currentSeg
-      ) {
-
-        const hashTab =
-          (location.hash || "")
-            .replace("#", "");
-
-
-        const item =
-          dept.items.find(
-            it => it.tab === hashTab
-          ) || dept.items[0];
-
-
-        return {
-
-          deptId: dept.id,
-
-          itemId:
-            item ? item.id : null
-
-        };
-
+      /* 같은 대시보드 안의 해시 탭과 개별 페이지를 함께 판별합니다. */
+      if (dept.baseUrl && repoSegmentOf(dept.baseUrl) === currentSeg) {
+        const hashTab = (location.hash || "").replace("#", "");
+        const items = dept.groups ? dept.groups.flatMap(group => group.items) : dept.items;
+        const item = items.find(it => it.tab === hashTab) || items.find(it => it.tab === "overview") || items[0];
+        return { deptId: dept.id, itemId: item ? item.id : null };
       }
-
-
-      /* Marketing / Finance */
-
-      for (const item of dept.items) {
-
-        if (
-          item.url &&
-          repoSegmentOf(item.url) === currentSeg
-        ) {
-
-          return {
-
-            deptId: dept.id,
-
-            itemId: item.id
-
-          };
-
+      const items = dept.groups ? dept.groups.flatMap(group => group.items) : dept.items;
+      for (const item of items) {
+        if (item.url && repoSegmentOf(item.url) === currentSeg) {
+          return { deptId: dept.id, itemId: item.id };
         }
-
       }
-
     }
 
 
@@ -1245,6 +1212,19 @@
 
 
 
+      #${SIDEBAR_ID} .fb-group-head {
+        width:100%;border:0;background:transparent;color:var(--sb-sub);
+        font-size:13px;font-weight:600;font-family:inherit;text-align:left;padding:10px 12px 10px 29px;
+        cursor:pointer;border-radius:9px;
+      }
+      #${SIDEBAR_ID} .fb-group-head:hover,
+      #${SIDEBAR_ID} .fb-menu-group.open > .fb-group-head {background:var(--sb-open-bg);color:var(--sb-active);}
+      #${SIDEBAR_ID} .fb-group-head::after {content:"▸";float:right;color:var(--sb-caret);transition:transform .18s;}
+      #${SIDEBAR_ID} .fb-menu-group.open > .fb-group-head::after {transform:rotate(90deg);}
+      #${SIDEBAR_ID} .fb-group-items {display:none;}
+      #${SIDEBAR_ID} .fb-menu-group.open > .fb-group-items {display:block;}
+      #${SIDEBAR_ID} .fb-item-nested {padding-left:47px;font-size:12px;}
+
       /* ===============================
          본문 위치
          =============================== */
@@ -1410,17 +1390,8 @@
     ev.preventDefault();
 
 
-    if (
-      typeof
-      window.__fbOperationSetTab
-      === "function"
-    ) {
-
-      window.__fbOperationSetTab(
-        item.tab
-      );
-
-    }
+    const setTab = dept.id === "cx" ? window.__fbCXSetTab : window.__fbOperationSetTab;
+    if (typeof setTab === "function") setTab(item.tab);
 
 
     try {
@@ -1786,67 +1757,48 @@
 
 
 
-          dept.items
-            .forEach(
-              item => {
-
-
-                const a =
-                  document.createElement(
-                    "a"
-                  );
-
-
-                a.className =
-                  "fb-item";
-
-
-                a.dataset.dept =
-                  dept.id;
-
-
-                a.dataset.item =
-                  item.id;
-
-
-                a.href =
-                  itemHref(
-                    dept,
-                    item
-                  );
-
-
-                /* 모든 메뉴 점으로 통일 */
-
-                a.innerHTML = `
-
-                  <span
-                    class="fb-item-dot"
-                  ></span>
-
-                  <span>
-                    ${item.name}
-                  </span>
-
-                `;
-
-
-                a.addEventListener(
-                  "click",
-                  ev =>
-                    onItemClick(
-                      ev,
-                      dept,
-                      item
-                    )
-                );
-
-
-                itemsInner
-                  .appendChild(a);
-
-              }
-            );
+          const addItem = (item, target, nested = false) => {
+            const a = document.createElement("a");
+            a.className = "fb-item" + (nested ? " fb-item-nested" : "");
+            a.dataset.dept = dept.id;
+            a.dataset.item = item.id;
+            a.href = itemHref(dept, item);
+            const dot = document.createElement("span");
+            dot.className = "fb-item-dot";
+            const label = document.createElement("span");
+            label.textContent = item.name;
+            a.append(dot, label);
+            a.addEventListener("click", ev => onItemClick(ev, dept, item));
+            target.appendChild(a);
+          };
+          if (dept.groups) {
+            dept.groups.forEach(group => {
+              const groupWrap = document.createElement("div");
+              groupWrap.className = "fb-menu-group";
+              groupWrap.dataset.group = group.id;
+              const groupHead = document.createElement("button");
+              groupHead.type = "button";
+              groupHead.className = "fb-group-head";
+              groupHead.textContent = group.name;
+              groupHead.setAttribute("aria-expanded", "false");
+              groupHead.addEventListener("click", () => {
+                const opening = !groupWrap.classList.contains("open");
+                itemsInner.querySelectorAll(".fb-menu-group").forEach(el => {
+                  el.classList.remove("open");
+                  el.querySelector(".fb-group-head")?.setAttribute("aria-expanded", "false");
+                });
+                groupWrap.classList.toggle("open", opening);
+                groupHead.setAttribute("aria-expanded", String(opening));
+              });
+              const children = document.createElement("div");
+              children.className = "fb-group-items";
+              group.items.forEach(item => addItem(item, children, true));
+              groupWrap.append(groupHead, children);
+              itemsInner.appendChild(groupWrap);
+            });
+          } else {
+            dept.items.forEach(item => addItem(item, itemsInner));
+          }
 
 
           itemsOuter
@@ -1894,6 +1846,13 @@
      ========================================================= */
 
   function updateActiveHighlight() {
+
+    document.querySelectorAll(`#${SIDEBAR_ID} .fb-menu-group`).forEach(group => {
+      if (group.querySelector(`.fb-item[data-item="${active.itemId}"]`)) {
+        group.classList.add("open");
+        group.querySelector(".fb-group-head")?.setAttribute("aria-expanded", "true");
+      }
+    });
 
     document
       .querySelectorAll(
