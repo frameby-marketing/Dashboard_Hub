@@ -101,7 +101,7 @@
 
         {
           id: "profit",
-          name: "영업이익",
+          name: "현금수지",
           url: "https://frameby-marketing.github.io/MARKETING-DASHBOARD/"
         },
 
