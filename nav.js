@@ -70,6 +70,7 @@
         { id: "overview", name: "종합현황", tab: "overview" },
         { id: "shipping", name: "택배 / 출고", tab: "shipping" },
         { id: "production", name: "제작 현황", tab: "production" },
+        { id: "inspection", name: "생산 입고·검수", tab: "inspection" },
         { id: "payment", name: "결제 관리", tab: "payment" },
         { id: "inbound", name: "입고 예정", tab: "inbound" },
         { id: "inboundManage", name: "입고 관리", tab: "inboundManage" },
