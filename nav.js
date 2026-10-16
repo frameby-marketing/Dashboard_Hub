@@ -1,12 +1,13 @@
 /**
- * [확실] CX 메뉴 수정본
- * nav.js의 기존 내용을 모두 지우고 아래 코드로 교체하세요.
+ * 자동 접힘 / 마우스 및 터치 지원
  */
 (function () {
   const HOME_URL = "https://frameby-marketing.github.io/Dashboard_Hub/";
   const LOGO_BLACK = "https://frameby-marketing.github.io/Dashboard_Hub/logo-black.png";
   const LOGO_WHITE = "https://frameby-marketing.github.io/Dashboard_Hub/logo-white.png";
-  const COLLAPSE_KEY = "fb-sidebar-collapsed";
+
+  let sidebarCollapsed = true;
+
   const THEME_KEY = "theme";
   const LEGACY_HOME_THEME_KEY = "fb-hub-theme";
   const SIDEBAR_ID = "fb-sidebar";
@@ -14,13 +15,18 @@
   const WIDTH_COLLAPSED = 60;
 
   let THEME_BOOT_LOCKED = true;
+
   const INITIAL_SAVED_THEME = (() => {
     try {
       const saved = localStorage.getItem(THEME_KEY);
       if (saved === "light" || saved === "dark") return saved;
+
       const legacySaved = localStorage.getItem(LEGACY_HOME_THEME_KEY);
-      if (legacySaved === "light" || legacySaved === "dark") return legacySaved;
+      if (legacySaved === "light" || legacySaved === "dark") {
+        return legacySaved;
+      }
     } catch (e) {}
+
     return "dark";
   })();
 
@@ -119,10 +125,15 @@
         const items = dept.groups
           ? dept.groups.flatMap(group => group.items)
           : dept.items;
+
         const item = items.find(it => it.tab === hashTab)
           || items.find(it => it.tab === "overview")
           || items[0];
-        return { deptId: dept.id, itemId: item ? item.id : null };
+
+        return {
+          deptId: dept.id,
+          itemId: item ? item.id : null
+        };
       }
 
       const items = dept.groups
@@ -131,11 +142,18 @@
 
       for (const item of items) {
         if (item.url && repoSegmentOf(item.url) === currentSeg) {
-          return { deptId: dept.id, itemId: item.id };
+          return {
+            deptId: dept.id,
+            itemId: item.id
+          };
         }
       }
     }
-    return { deptId: null, itemId: null };
+
+    return {
+      deptId: null,
+      itemId: null
+    };
   }
 
   let active = detectActive();
@@ -143,7 +161,10 @@
 
   function getTheme() {
     const htmlTheme = document.documentElement.getAttribute("data-theme");
-    if (htmlTheme === "light" || htmlTheme === "dark") return htmlTheme;
+
+    if (htmlTheme === "light" || htmlTheme === "dark") {
+      return htmlTheme;
+    }
 
     try {
       const saved = localStorage.getItem(THEME_KEY);
@@ -159,6 +180,7 @@
 
       if (saved !== "light" && saved !== "dark") {
         const legacySaved = localStorage.getItem(LEGACY_HOME_THEME_KEY);
+
         if (legacySaved === "light" || legacySaved === "dark") {
           saved = legacySaved;
           localStorage.setItem(THEME_KEY, saved);
@@ -175,6 +197,7 @@
 
   function saveTheme(theme) {
     if (theme !== "light" && theme !== "dark") return;
+
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch (e) {}
@@ -190,21 +213,34 @@
     if (!THEME_BOOT_LOCKED) saveTheme(theme);
 
     const logo = sidebar.querySelector(".fb-brand-logo");
-    if (logo) logo.src = theme === "light" ? LOGO_BLACK : LOGO_WHITE;
-  }
-
-  function isCollapsed() {
-    try {
-      return localStorage.getItem(COLLAPSE_KEY) === "1";
-    } catch (e) {
-      return false;
+    if (logo) {
+      logo.src = theme === "light" ? LOGO_BLACK : LOGO_WHITE;
     }
   }
 
+  function isCollapsed() {
+    return sidebarCollapsed;
+  }
+
   function setCollapsed(value) {
-    try {
-      localStorage.setItem(COLLAPSE_KEY, value ? "1" : "0");
-    } catch (e) {}
+    sidebarCollapsed = value;
+
+    const sidebar = document.getElementById(SIDEBAR_ID);
+    if (!sidebar) return;
+
+    sidebar.classList.toggle("collapsed", value);
+    document.body.classList.toggle("fb-sidebar-collapsed", value);
+
+    const toggle = sidebar.querySelector(".fb-sb-toggle");
+
+    if (toggle) {
+      toggle.textContent = value ? "☰" : "«";
+      toggle.setAttribute("aria-expanded", String(!value));
+      toggle.setAttribute(
+        "aria-label",
+        value ? "메뉴 펼치기" : "메뉴 접기"
+      );
+    }
   }
 
   function injectStyle() {
@@ -212,6 +248,7 @@
 
     const style = document.createElement("style");
     style.id = "fb-sidebar-style";
+
     style.textContent = `
       #${SIDEBAR_ID} {
         --sb-bg:#12151c;
@@ -228,6 +265,7 @@
         --sb-open-bg:rgba(91,140,255,.10);
         --sb-active:#8fb1ff;
         --sb-active-dot:#8fb1ff;
+
         position:fixed;
         top:0;
         left:0;
@@ -326,6 +364,31 @@
         align-items:center;
         justify-content:center;
         font-size:13px;
+      }
+
+      #${SIDEBAR_ID}.collapsed .fb-sb-home {
+        display:none;
+      }
+
+      #${SIDEBAR_ID}.collapsed .fb-sb-top {
+        justify-content:center;
+        padding:14px 8px;
+      }
+
+      #${SIDEBAR_ID}:not(.collapsed) {
+        box-shadow:8px 0 24px rgba(0,0,0,.16);
+      }
+
+      #${SIDEBAR_ID} :focus-visible {
+        outline:2px solid var(--sb-active);
+        outline-offset:-2px;
+      }
+
+      @media(prefers-reduced-motion:reduce) {
+        #${SIDEBAR_ID},
+        #${SIDEBAR_ID} * {
+          transition:none !important;
+        }
       }
 
       .fb-sb-toggle:hover {
@@ -531,7 +594,7 @@
       }
 
       body.fb-has-sidebar {
-        margin-left:${WIDTH_OPEN}px;
+        margin-left:${WIDTH_COLLAPSED}px;
         transition:margin-left .18s ease;
       }
 
@@ -544,10 +607,6 @@
       }
 
       @media(max-width:860px) {
-        #${SIDEBAR_ID} {
-          width:${WIDTH_COLLAPSED}px;
-        }
-
         body.fb-has-sidebar {
           margin-left:${WIDTH_COLLAPSED}px;
         }
@@ -559,15 +618,21 @@
 
   function applyBodyOffset() {
     document.body.classList.add("fb-has-sidebar");
-    document.body.classList.toggle("fb-sidebar-collapsed", isCollapsed());
+    document.body.classList.toggle(
+      "fb-sidebar-collapsed",
+      isCollapsed()
+    );
   }
 
   function itemHref(dept, item) {
     if (item.tab) {
       const deptSeg = repoSegmentOf(dept.baseUrl);
+
       if (deptSeg === currentSeg) return "#" + item.tab;
+
       return dept.baseUrl + "#" + item.tab;
     }
+
     return item.url;
   }
 
@@ -583,7 +648,9 @@
       ? window.__fbCXSetTab
       : window.__fbOperationSetTab;
 
-    if (typeof setTab === "function") setTab(item.tab);
+    if (typeof setTab === "function") {
+      setTab(item.tab);
+    }
 
     try {
       history.replaceState(null, "", "#" + item.tab);
@@ -591,7 +658,11 @@
       location.hash = item.tab;
     }
 
-    active = { deptId: dept.id, itemId: item.id };
+    active = {
+      deptId: dept.id,
+      itemId: item.id
+    };
+
     updateActiveHighlight();
   }
 
@@ -607,12 +678,16 @@
     const sidebar = document.createElement("nav");
     sidebar.id = SIDEBAR_ID;
 
-    if (isCollapsed()) sidebar.classList.add("collapsed");
+    if (isCollapsed()) {
+      sidebar.classList.add("collapsed");
+    }
 
     const top = document.createElement("div");
     top.className = "fb-sb-top";
 
-    const initialLogo = getTheme() === "light" ? LOGO_BLACK : LOGO_WHITE;
+    const initialLogo = getTheme() === "light"
+      ? LOGO_BLACK
+      : LOGO_WHITE;
 
     top.innerHTML = `
       <a class="fb-sb-home" href="${HOME_URL}" aria-label="FRAME BY 홈">
@@ -621,19 +696,75 @@
       </a>
       <button class="fb-sb-toggle" type="button"
         title="사이드바 접기/펼치기">
-        ${isCollapsed() ? "»" : "«"}
+        ${isCollapsed() ? "☰" : "«"}
       </button>
     `;
 
     const toggleBtn = top.querySelector(".fb-sb-toggle");
 
-    toggleBtn.addEventListener("click", () => {
-      const collapsed = !sidebar.classList.contains("collapsed");
+    toggleBtn.setAttribute("aria-expanded", String(!isCollapsed()));
+    toggleBtn.setAttribute(
+      "aria-label",
+      isCollapsed() ? "메뉴 펼치기" : "메뉴 접기"
+    );
 
-      sidebar.classList.toggle("collapsed", collapsed);
-      document.body.classList.toggle("fb-sidebar-collapsed", collapsed);
-      setCollapsed(collapsed);
-      toggleBtn.textContent = collapsed ? "»" : "«";
+    let closeTimer;
+
+    const cancelClose = () => {
+      window.clearTimeout(closeTimer);
+    };
+
+    // 마우스가 네비게이션 영역에 들어오면 펼칩니다.
+    sidebar.addEventListener("pointerenter", ev => {
+      if (ev.pointerType !== "mouse") return;
+
+      cancelClose();
+      setCollapsed(false);
+    });
+
+    // 마우스가 영역을 벗어나면 잠시 후 접습니다.
+    sidebar.addEventListener("pointerleave", ev => {
+      if (ev.pointerType !== "mouse") return;
+
+      cancelClose();
+
+      closeTimer = window.setTimeout(() => {
+        setCollapsed(true);
+      }, 180);
+    });
+
+    // 접힌 영역의 첫 터치는 메뉴를 여는 용도로만 사용합니다.
+    sidebar.addEventListener("click", ev => {
+      cancelClose();
+
+      if (!isCollapsed()) return;
+
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      setCollapsed(false);
+    }, true);
+
+    toggleBtn.addEventListener("click", () => {
+      setCollapsed(!isCollapsed());
+    });
+
+    sidebar.addEventListener("keydown", ev => {
+      if (ev.key === "Escape") {
+        cancelClose();
+        setCollapsed(true);
+        toggleBtn.focus();
+      } else if (ev.key === "Tab" || ev.key === "ArrowRight") {
+        cancelClose();
+        setCollapsed(false);
+      }
+    });
+
+    sidebar.addEventListener("focusout", ev => {
+      if (!sidebar.contains(ev.relatedTarget)) {
+        cancelClose();
+        setCollapsed(true);
+      }
     });
 
     sidebar.appendChild(top);
@@ -643,7 +774,10 @@
 
     DEPARTMENTS.forEach(dept => {
       const wrap = document.createElement("div");
-      wrap.className = "fb-dept" + (openDeptId === dept.id ? " open" : "");
+
+      wrap.className = "fb-dept"
+        + (openDeptId === dept.id ? " open" : "");
+
       wrap.dataset.dept = dept.id;
 
       const head = document.createElement("button");
@@ -659,13 +793,6 @@
       `;
 
       head.addEventListener("click", () => {
-        if (sidebar.classList.contains("collapsed")) {
-          sidebar.classList.remove("collapsed");
-          document.body.classList.remove("fb-sidebar-collapsed");
-          setCollapsed(false);
-          toggleBtn.textContent = "«";
-        }
-
         const willOpen = !wrap.classList.contains("open");
         openExclusively(willOpen ? dept.id : null);
       });
@@ -680,6 +807,7 @@
 
       const addItem = (item, target, nested = false) => {
         const a = document.createElement("a");
+
         a.className = "fb-item" + (nested ? " fb-item-nested" : "");
         a.dataset.dept = dept.id;
         a.dataset.item = item.id;
@@ -692,7 +820,13 @@
         label.textContent = item.name;
 
         a.append(dot, label);
-        a.addEventListener("click", ev => onItemClick(ev, dept, item));
+
+        a.addEventListener("click", ev => {
+          onItemClick(ev, dept, item);
+          cancelClose();
+          setCollapsed(true);
+        });
+
         target.appendChild(a);
       };
 
@@ -713,6 +847,7 @@
 
             itemsInner.querySelectorAll(".fb-menu-group").forEach(el => {
               el.classList.remove("open");
+
               el.querySelector(".fb-group-head")
                 ?.setAttribute("aria-expanded", "false");
             });
@@ -724,12 +859,17 @@
           const children = document.createElement("div");
           children.className = "fb-group-items";
 
-          group.items.forEach(item => addItem(item, children, true));
+          group.items.forEach(item => {
+            addItem(item, children, true);
+          });
+
           groupWrap.append(groupHead, children);
           itemsInner.appendChild(groupWrap);
         });
       } else {
-        dept.items.forEach(item => addItem(item, itemsInner));
+        dept.items.forEach(item => {
+          addItem(item, itemsInner);
+        });
       }
 
       itemsOuter.appendChild(itemsInner);
@@ -745,9 +885,12 @@
   }
 
   function updateActiveHighlight() {
-    document.querySelectorAll(`#${SIDEBAR_ID} .fb-menu-group`).forEach(group => {
+    document.querySelectorAll(
+      `#${SIDEBAR_ID} .fb-menu-group`
+    ).forEach(group => {
       if (group.querySelector(`.fb-item[data-item="${active.itemId}"]`)) {
         group.classList.add("open");
+
         group.querySelector(".fb-group-head")
           ?.setAttribute("aria-expanded", "true");
       }
@@ -786,6 +929,7 @@
           "data-theme",
           INITIAL_SAVED_THEME
         );
+
         saveTheme(INITIAL_SAVED_THEME);
         THEME_BOOT_LOCKED = false;
         syncSidebarTheme();
@@ -808,6 +952,19 @@
       }
     });
 
+    // 터치 또는 클릭으로 메뉴 바깥을 누르면 접습니다.
+    document.addEventListener("pointerdown", ev => {
+      const sidebar = document.getElementById(SIDEBAR_ID);
+
+      if (sidebar && !sidebar.contains(ev.target)) {
+        setCollapsed(true);
+      }
+    }, true);
+
+    window.addEventListener("blur", () => {
+      setCollapsed(true);
+    });
+
     const bodyObserver = new MutationObserver(() => {
       if (!document.getElementById(SIDEBAR_ID)) {
         render();
@@ -816,11 +973,17 @@
       }
     });
 
-    bodyObserver.observe(document.body, { childList: true });
+    bodyObserver.observe(document.body, {
+      childList: true
+    });
 
     window.addEventListener("hashchange", () => {
       active = detectActive();
-      if (active.deptId) openExclusively(active.deptId);
+
+      if (active.deptId) {
+        openExclusively(active.deptId);
+      }
+
       updateActiveHighlight();
     });
   }
