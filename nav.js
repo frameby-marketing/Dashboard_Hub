@@ -62,6 +62,11 @@
           url: "https://frameby-marketing.github.io/MARKETING-DASHBOARD/"
         },
         {
+          id: "operatingProfit",
+          name: "영업이익",
+          url: "https://frameby-marketing.github.io/Profit/"
+        },
+        {
           id: "financeDetail",
           name: "재무",
           url: "https://frameby-marketing.github.io/Finance/"
